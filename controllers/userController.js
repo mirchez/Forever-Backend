@@ -78,4 +78,18 @@ export const registerUser = async (req, res) => {
 };
 
 //route for amdmin Login
-export const adminLogin = async () => {};
+export const adminLogin = async (req, res) => {
+  try {
+    const {email, password} = req.body;
+    if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
+      const token = jwt.sign(email+password, process.env.JWT_SECRET);
+      res.status(200).json({success:true, token})
+    }else{
+      res.status(401).json({  success:false, message: "Invalid Credentials"})
+    }
+
+  } catch (error) {
+    console.log(error);
+    res.status(409).json({ error: "Not Valid Credentials", details: error.message });
+  }
+};

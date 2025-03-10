@@ -69,12 +69,33 @@ export const listProducts = async (req, res) => {
     res.status(200).json({ success: true, product });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message }); 
   }
 };
 
 //function for removing product
-export const removeProduct = async (req, res) => {};
+export const removeProduct = async (req, res) => {
+  try {
+    const deletedProduct = await productModel.findByIdAndDelete(req.body.id);
+
+    if(!deletedProduct){
+      res.status(404).json({success: false, message: "Product not found"})
+    }
+    res.status(200).json({success: true, message: "Product Removed"})
+  } catch (error) {
+    console.log(error.message)
+    res.status(409).json({success: false, message: error.message})
+  }
+}; 
 
 //function for single product
-export const singleProduct = async (req, res) => {};
+export const singleProduct = async (req, res) => {
+  try {
+    const {productId} = req.body;
+    const product = await productModel.findById(productId)
+    res.status(200).json({success:true,product})
+  } catch (error) {
+    console.log(error.message)
+    res.status(409).json({success: false, message: error.message}) 
+  }
+};

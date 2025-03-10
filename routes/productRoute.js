@@ -8,15 +8,16 @@ import {
 } from "../controllers/productController.js";
 import upload from "../middleware/multer.js";
 import { handleInputErrors } from "../middleware/validation.js";
+import adminAuth from "../middleware/adminauth.js";
 
 const productRouter = Router();
 
 productRouter.post(
-  "/add",
+  "/add", adminAuth,
   // body("name").notEmpty().withMessage("Not a valid name"),
   // body("description").notEmpty().withMessage("Should have a description"),
-  // body("price").isNumeric().withMessage("Should have a valid price"), // Corregido para validar números
-  // body("bestseller").isBoolean().withMessage("Not a valid value"), // Asegúrate de que bestseller sea un booleano
+  // body("price").isNumeric().withMessage("Should have a valid price"), // valid number
+  // body("bestseller").isBoolean().withMessage("Not a valid value"), //valid boolean
   // body("category").notEmpty().withMessage("Not a valid category"),
   // body("subCategory").notEmpty().withMessage("Not a valid subCategory"),
   // body("sizes").notEmpty().withMessage("Not a valid size"),
@@ -31,9 +32,9 @@ productRouter.post(
   addProduct
 );
 
-productRouter.post("/remove", removeProduct);
+productRouter.post("/remove", adminAuth, removeProduct);
 
-productRouter.post("/single", singleProduct);
+productRouter.post("/single",  singleProduct);
 
 productRouter.get("/list", listProducts);
 
