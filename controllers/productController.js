@@ -29,7 +29,6 @@ export const addProduct = async (req, res) => {
           const result = await cloudinary.uploader.upload(item.path, {
             resource_type: "image",
           });
-
           return result.secure_url;
         } catch (error) {
           console.log(error.message);
@@ -49,9 +48,7 @@ export const addProduct = async (req, res) => {
       image: imagesUrl,
       date: Date.now(),
     };
-
     console.log(productData);
-
     const product = new productModel(productData);
     await product.save();
 
@@ -67,9 +64,10 @@ export const listProducts = async (req, res) => {
   try {
     const product = await productModel.find();
     res.status(200).json({ success: true, product });
+    // console.log(product);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: error.message }); 
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -78,24 +76,24 @@ export const removeProduct = async (req, res) => {
   try {
     const deletedProduct = await productModel.findByIdAndDelete(req.body.id);
 
-    if(!deletedProduct){
-      res.status(404).json({success: false, message: "Product not found"})
+    if (!deletedProduct) {
+      res.status(404).json({ success: false, message: "Product not found" });
     }
-    res.status(200).json({success: true, message: "Product Removed"})
+    res.status(200).json({ success: true, message: "Product Removed" });
   } catch (error) {
-    console.log(error.message)
-    res.status(409).json({success: false, message: error.message})
+    console.log(error.message);
+    res.status(409).json({ success: false, message: error.message });
   }
-}; 
+};
 
 //function for single product
 export const singleProduct = async (req, res) => {
   try {
-    const {productId} = req.body;
-    const product = await productModel.findById(productId)
-    res.status(200).json({success:true,product})
+    const { productId } = req.body;
+    const product = await productModel.findById(productId);
+    res.status(200).json({ success: true, product });
   } catch (error) {
-    console.log(error.message)
-    res.status(409).json({success: false, message: error.message}) 
+    console.log(error.message);
+    res.status(409).json({ success: false, message: error.message });
   }
 };

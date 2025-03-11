@@ -29,13 +29,15 @@ userRouter.post(
   handleInputErrors,
   loginUser
 );
-userRouter.post("/admin",
-    body("email").isEmail().notEmpty().withMessage("Not a valid email"),
-    body("password")
-      .isLength({ min: 8 })
-      .withMessage("Not valid password, 8 characters is needed"),
-    handleInputErrors,
-    adminLogin
+
+userRouter.post(
+  "/admin",
+  body("email").isEmail().notEmpty().withMessage("Not a valid email"),
+  body("password")
+    .isLength({ min: 8 })
+    .withMessage("Not valid password, 8 characters is needed"),
+  handleInputErrors,
+  adminLogin
 );
 
 export default userRouter;
