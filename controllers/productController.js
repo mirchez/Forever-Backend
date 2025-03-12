@@ -62,8 +62,8 @@ export const addProduct = async (req, res) => {
 //function for list product
 export const listProducts = async (req, res) => {
   try {
-    const product = await productModel.find();
-    res.status(200).json({ success: true, product });
+    const products = await productModel.find();
+    res.status(200).json({ success: true, products });
     // console.log(product);
   } catch (error) {
     console.log(error);
