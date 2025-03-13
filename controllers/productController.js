@@ -48,7 +48,7 @@ export const addProduct = async (req, res) => {
       image: imagesUrl,
       date: Date.now(),
     };
-    console.log(productData);
+
     const product = new productModel(productData);
     await product.save();
 
@@ -64,7 +64,6 @@ export const listProducts = async (req, res) => {
   try {
     const products = await productModel.find();
     res.status(200).json({ success: true, products });
-    // console.log(product);
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: error.message });

@@ -10,7 +10,6 @@ const adminAuth = (req, res, next) => {
     }
 
     const tokenDecoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("token", tokenDecoded);
     if (tokenDecoded !== process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD) {
       return res
         .status(401)
@@ -19,7 +18,7 @@ const adminAuth = (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log(error.message);
+    error.message;
     res.status(409).json({ success: false, message: error.message });
   }
 };
