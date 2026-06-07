@@ -2,7 +2,8 @@ import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from "stripe";
 //global variables
-const currency = "usd";
+// PYG es una moneda sin decimales en Stripe: unit_amount va en guaraníes, sin multiplicar por 100
+const currency = "pyg";
 const deliveryCharge = 10;
 //gateway initialize
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -27,7 +28,12 @@ const placeOrder = async (req, res) => {
 
     await userModel.findByIdAndUpdate(userId, { cartData: {} });
 
-    res.status(200).json({ success: true, message: "Order Placed" });
+    res.status(200).json({
+      success: true,
+      message: "Order Placed",
+      orderId: newOrder._id,
+      date: orderData.date,
+    });
   } catch (error) {
     console.log(error.message);
     res.status(409).json({ success: false, message: error.message });
@@ -58,7 +64,7 @@ const placeOrderStripe = async (req, res) => {
         product_data: {
           name: item.name,
         },
-        unit_amount: item.price * 100,
+        unit_amount: item.price,
       },
       quantity: item.quantity,
     }));
@@ -69,7 +75,7 @@ const placeOrderStripe = async (req, res) => {
         product_data: {
           name: "Delivery Charges",
         },
-        unit_amount: deliveryCharge * 100,
+        unit_amount: deliveryCharge,
       },
       quantity: 1,
     });

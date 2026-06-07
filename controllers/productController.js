@@ -59,6 +59,64 @@ export const addProduct = async (req, res) => {
   }
 };
 
+//function for update product
+export const updateProduct = async (req, res) => {
+  try {
+    const {
+      id,
+      name,
+      description,
+      price,
+      category,
+      subCategory,
+      sizes,
+      bestseller,
+    } = req.body;
+
+    const product = await productModel.findById(id);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+    }
+
+    // por cada slot: si llega archivo nuevo se sube a Cloudinary,
+    // si no, se conserva la URL existente enviada en existingImageN
+    const imagesUrl = [];
+    for (let i = 1; i <= 4; i++) {
+      const file = req.files?.[`image${i}`]?.[0];
+      if (file) {
+        const result = await cloudinary.uploader.upload(file.path, {
+          resource_type: "image",
+        });
+        imagesUrl.push(result.secure_url);
+      } else if (req.body[`existingImage${i}`]) {
+        imagesUrl.push(req.body[`existingImage${i}`]);
+      }
+    }
+
+    const updateData = {
+      name,
+      description,
+      price: Number(price),
+      category,
+      subCategory,
+      bestseller: bestseller === "true" ? true : false,
+      sizes: JSON.parse(sizes),
+    };
+    if (imagesUrl.length > 0) {
+      updateData.image = imagesUrl;
+    }
+
+    await productModel.findByIdAndUpdate(id, updateData);
+
+    res.status(200).json({ success: true, message: "Product Updated" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 //function for list product
 export const listProducts = async (req, res) => {
   try {
