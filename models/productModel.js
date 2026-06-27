@@ -9,6 +9,7 @@ const productSchema = new Schema({
   subCategory: { type: String, required: true },
   sizes: { type: Array, required: true },
   bestseller: { type: Boolean },
+  stock: { type: Number, default: 0 },
   date: { type: Number, required: true },
 });
 

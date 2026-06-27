@@ -12,6 +12,7 @@ export const addProduct = async (req, res) => {
       subCategory,
       sizes,
       bestseller,
+      stock,
     } = req.body;
 
     const image1 = req.files?.image1?.[0];
@@ -45,6 +46,7 @@ export const addProduct = async (req, res) => {
       subCategory,
       bestseller: bestseller === "true" ? true : false,
       sizes: JSON.parse(sizes),
+      stock: Number(stock) || 0,
       image: imagesUrl,
       date: Date.now(),
     };
@@ -71,6 +73,7 @@ export const updateProduct = async (req, res) => {
       subCategory,
       sizes,
       bestseller,
+      stock,
     } = req.body;
 
     const product = await productModel.findById(id);
@@ -103,6 +106,7 @@ export const updateProduct = async (req, res) => {
       subCategory,
       bestseller: bestseller === "true" ? true : false,
       sizes: JSON.parse(sizes),
+      stock: Number(stock) || 0,
     };
     if (imagesUrl.length > 0) {
       updateData.image = imagesUrl;
